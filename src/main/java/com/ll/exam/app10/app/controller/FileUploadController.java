@@ -20,7 +20,7 @@ public class FileUploadController {
         File file = new File("/Users/eunjung/Documents/temp/app10");
 
         try {
-            img1.transferTo(new File("/Users/eunjung/Documents/temp/app10/1png"));
+            img1.transferTo(new File("/Users/eunjung/Documents/temp/app10/1.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

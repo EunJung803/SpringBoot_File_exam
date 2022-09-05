@@ -13,14 +13,17 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/upload")
 public class FileUploadController {
+    @Value("${custom.genFileDirPath}")
+    private String genFileDirPath;  // application.yml에 있는 genFileDirPath 경로
 
     @RequestMapping("")
     @ResponseBody
-    public String upload(@RequestParam("img1") MultipartFile img1) {
-        File file = new File("/Users/eunjung/Documents/temp/app10");
+    public String upload(@RequestParam("img1") MultipartFile img1, @RequestParam("img2") MultipartFile img2) {
+//        File file = new File("/Users/eunjung/Documents/temp/app10");
 
         try {
-            img1.transferTo(new File("/Users/eunjung/Documents/temp/app10/1.png"));
+            img1.transferTo(new File(genFileDirPath + "/1.png"));
+            img2.transferTo(new File(genFileDirPath + "/2.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

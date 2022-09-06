@@ -1,6 +1,6 @@
 package com.ll.exam.app10.app.member.service;
 
-import com.ll.exam.app10.app.fileUpload.entity.Member;
+import com.ll.exam.app10.app.member.entity.Member;
 import com.ll.exam.app10.app.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public Member getMemberByUserId(String userId) {
-        return memberRepository.findByUsername(userId).orElse(null);
+        return memberRepository.findByUserId(userId).orElse(null);
     }
 
     public Member memberJoin(String userId, String password, String email, MultipartFile profileImg) {

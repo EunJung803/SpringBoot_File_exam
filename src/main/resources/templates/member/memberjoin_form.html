@@ -2,9 +2,9 @@
 
 <script>
     function JoinForm__submit(form) {
-        form.username.value = form.username.value.trim();
+        form.userId.value = form.userId.value.trim();
 
-        if ( form.username.value.length == 0 ) {
+        if ( form.userId.value.length == 0 ) {
             alert("아이디를 입력해주세요.");
             form.username.focus();
             return;
@@ -34,7 +34,7 @@
 <form th:action method="POST" enctype="multipart/form-data" onsubmit="JoinForm__submit(this); return false;">
     <div>
         <span>아이디</span>
-        <input type="text" name="username">
+        <input type="text" name="userId">
     </div>
     <div>
         <span>비밀번호</span>

@@ -4,6 +4,7 @@ import com.ll.exam.app10.app.member.entity.Member;
 import com.ll.exam.app10.app.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,13 +38,17 @@ public class MemberController {
     }
 
     @GetMapping("/profile")
-    public String memberProfile(HttpSession session) {
+    public String memberProfile(HttpSession session, Model model) {
         Long loginedMemberId = (Long) session.getAttribute("loginedMemberId");
         boolean isLogined = loginedMemberId != null;
 
         if (isLogined == false) {
             return "redirect:/?errorMsg=Need to login!";
         }
+
+        Member loginedMember = memberService.getMemberById(loginedMemberId);
+
+        model.addAttribute("loginedMember", loginedMember);
 
         return "member/profile";
     }

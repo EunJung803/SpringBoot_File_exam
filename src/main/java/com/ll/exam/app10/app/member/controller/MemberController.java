@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 
 @Controller
@@ -29,8 +28,8 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String memberJoin(HttpServletRequest req, String userId, String password, String email, MultipartFile profileImg) {
-        Member oldMember = memberService.getMemberByUserId(userId);
+    public String memberJoin(HttpServletRequest req, String username, String password, String email, MultipartFile profileImg) {
+        Member oldMember = memberService.getMemberByUserName(username);
 
         String passwordClearText = password;
         password = passwordEncoder.encode(password);
@@ -39,10 +38,10 @@ public class MemberController {
             return "redirect:/?errorMsg=Already done.";
         }
 
-        Member member = memberService.memberJoin(userId, password, email, profileImg);
+        Member member = memberService.memberJoin(username, password, email, profileImg);
 
         try {
-            req.login(userId, passwordClearText);
+            req.login(username, passwordClearText);
         } catch (ServletException e) {
             throw new RuntimeException(e);
         }
@@ -53,7 +52,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profile")
     public String memberProfile(Principal principal, Model model) {
-        Member loginedMember = memberService.getMemberByUserId(principal.getName());
+        Member loginedMember = memberService.getMemberByUserName(principal.getName());
 
         model.addAttribute("loginedMember", loginedMember);
 

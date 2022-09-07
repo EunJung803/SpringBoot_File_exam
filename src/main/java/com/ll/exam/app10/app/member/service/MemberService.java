@@ -28,11 +28,11 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
-    public Member getMemberByUserId(String userId) {
-        return memberRepository.findByUserId(userId).orElse(null);
+    public Member getMemberByUserName(String username) {
+        return memberRepository.findByUsername(username).orElse(null);
     }
 
-    public Member memberJoin(String userId, String password, String email, MultipartFile profileImg) {
+    public Member memberJoin(String username, String password, String email, MultipartFile profileImg) {
         String profileImgRelPath = "member/" + UUID.randomUUID().toString() + ".png";
         File profileImgFile = new File(genFileDirPath + "/" + profileImgRelPath);
 
@@ -45,7 +45,7 @@ public class MemberService implements UserDetailsService {
         }
 
         Member member = Member.builder()
-                .userId(userId)
+                .username(username)
                 .password(password)
                 .email(email)
                 .profileImg(profileImgRelPath)
@@ -61,12 +61,12 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        Member member = memberRepository.findByUserId(userId).get();
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Member member = memberRepository.findByUsername(username).get();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("member"));
 
-        return new User(member.getUserId(), member.getPassword(), authorities);
+        return new User(member.getUsername(), member.getPassword(), authorities);
     }
 }

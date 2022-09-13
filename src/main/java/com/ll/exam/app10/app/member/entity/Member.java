@@ -35,4 +35,11 @@ public class Member extends BaseEntity {
         return AppConfig.GET_FILE_DIR_PATH + "/" + profileImg;
         // 엔티티 내부에 절대 경로를 넣을 수 없기에 AppConfig을 만들어서 사용
     }
+
+    public String getProfileImgUrl() {
+        if (profileImg == null) {
+            return null;
+        }
+        return "/gen/" + profileImg;
+    }
 }

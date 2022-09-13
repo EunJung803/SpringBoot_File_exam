@@ -22,9 +22,16 @@ public class MemberController {
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
 
+    // 회원가입
     @GetMapping("/join")
     public String memberJoin() {
         return "member/memberjoin_form";
+    }
+
+    // 로그인
+    @GetMapping("/login")
+    public String showLogin() {
+        return "member/login_form";
     }
 
     @PostMapping("/join")

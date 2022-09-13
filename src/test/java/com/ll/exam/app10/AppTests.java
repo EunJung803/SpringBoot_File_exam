@@ -2,6 +2,7 @@ package com.ll.exam.app10;
 
 import com.ll.exam.app10.app.home.controller.HomeController;
 import com.ll.exam.app10.app.member.controller.MemberController;
+import com.ll.exam.app10.app.member.entity.Member;
 import com.ll.exam.app10.app.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -126,6 +127,8 @@ public class AppTests {
                 inputStream
         );
 
+
+        // 1) 5번회원이 생성
         // 회원가입(MVC MOCK)
         // when
         ResultActions resultActions = mvc.perform(
@@ -138,8 +141,17 @@ public class AppTests {
                                 .characterEncoding("UTF-8"))
                 .andDo(print());
 
-        // 5번회원이 생성되어야 함, 테스트
-        // ToDo : 여기 마저 구현
-        // 5번회원의 프로필 이미지 제거
+        // 2) 5번회원의 프로필 이미지 제거
+        resultActions
+                .andExpect(status().is3xxRedirection())     // 요청이 300 이고
+                .andExpect(redirectedUrl("/member/profile"))    // 여기로 이동해야 하고
+                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().methodName("memberJoin"));     // MemberController 에서 memberJoin 클래스를 다룬다
+
+        Member member = memberService.getMemberById(5L);
+
+        assertThat(member).isNotNull();
+
+        memberService.removeProfileImg(member);
     }
 }

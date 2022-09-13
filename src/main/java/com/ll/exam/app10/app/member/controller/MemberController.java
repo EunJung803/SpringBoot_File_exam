@@ -38,7 +38,7 @@ public class MemberController {
             return "redirect:/?errorMsg=Already done.";
         }
 
-        Member member = memberService.memberJoin(username, password, email, profileImg);
+        Member member = memberService.join(username, password, email, profileImg);
 
         try {
             req.login(username, passwordClearText);

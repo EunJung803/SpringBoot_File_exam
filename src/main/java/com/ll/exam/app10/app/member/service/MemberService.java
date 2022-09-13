@@ -32,7 +32,7 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByUsername(username).orElse(null);
     }
 
-    public Member memberJoin(String username, String password, String email, MultipartFile profileImg) {
+    public Member join(String username, String password, String email, MultipartFile profileImg) {
         String profileImgDirName = "member";
         String fileName = UUID.randomUUID().toString() + ".png";
         String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;
@@ -88,5 +88,12 @@ public class MemberService implements UserDetailsService {
 
     public long count() {
         return memberRepository.count();
+    }
+
+    public void removeProfileImg(Member member) {
+        member.removeProfileImgOnStorage(); // 파일삭제
+        member.setProfileImg(null);     // 프로파일 이미지를 null로 설정
+
+        memberRepository.save(member);  // 변경사항 저장
     }
 }

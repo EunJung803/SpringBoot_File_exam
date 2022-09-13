@@ -1,11 +1,13 @@
 package com.ll.exam.app10.app.member.entity;
 
+import com.ll.exam.app10.app.base.AppConfig;
 import com.ll.exam.app10.app.base.entity.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.io.File;
 
 @Entity
 @Setter
@@ -20,4 +22,16 @@ public class Member extends BaseEntity {
     private String password;
     private String email;
     private String profileImg;
+
+    public void removeProfileImgOnStorage() {   // 스토리지에서 지우게 된다 프로필 이미지를
+        if (profileImg == null || profileImg.trim().length() == 0) return;  // 예외처리
+
+        String profileImgPath = getProfileImgPath();
+
+        new File(profileImgPath).delete();
+    }
+
+    private String getProfileImgPath() {    // 프로필 이미지의 경로를 얻는 클래스
+        return AppConfig.GET_FILE_DIR_PATH + "/" + profileImg;
+    }
 }

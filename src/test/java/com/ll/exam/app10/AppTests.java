@@ -1,6 +1,7 @@
 package com.ll.exam.app10;
 
 import com.ll.exam.app10.app.home.controller.HomeController;
+import com.ll.exam.app10.app.member.controller.MemberController;
 import com.ll.exam.app10.app.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import javax.transaction.Transactional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -51,9 +53,50 @@ public class AppTests {
 
     @Test
     @DisplayName("회원의 수")
-    @Rollback(false)
     void t2() throws Exception {
         long count = memberService.count();
         assertThat(count).isGreaterThan(0);
+    }
+
+    @Test
+    @DisplayName("user1로 로그인 후 프로필페이지에 접속하면 user1의 이메일이 보여야 한다.")
+    void t3() throws Exception {
+        // mockMvc로 로그인 처리
+        // WHEN
+        // GET /member/profile
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/member/profile")
+                                .with(user("user1").password("1234").roles("user"))
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().methodName("memberProfile"))
+                .andExpect(content().string(containsString("user1@test.com")));
+    }
+
+    @Test
+    @DisplayName("user4로 로그인 후 프로필페이지에 접속하면 user4의 이메일이 보여야 한다.")
+    void t4() throws Exception {
+        // mockMvc로 로그인 처리
+        // WHEN
+        // GET /member/profile
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/member/profile")
+                                .with(user("user4").password("1234").roles("user"))
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(handler().handlerType(MemberController.class))
+                .andExpect(handler().methodName("memberProfile"))
+                .andExpect(content().string(containsString("user4@test.com")));
     }
 }

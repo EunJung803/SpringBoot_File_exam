@@ -23,17 +23,20 @@ public class MemberController {
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
     public String memberJoin() {
         return "member/memberjoin_form";
     }
 
     // 로그인
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
     public String showLogin() {
         return "member/login_form";
     }
 
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String memberJoin(HttpServletRequest req, String username, String password, String email, MultipartFile profileImg) {
         Member oldMember = memberService.getMemberByUserName(username);

@@ -55,7 +55,7 @@ public class AppTests {
         resultActions
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(handler().handlerType(HomeController.class))
-                .andExpect(handler().methodName("main"))
+                .andExpect(handler().methodName("showMain"))
                 .andExpect(content().string(containsString("안녕")));
     }
 

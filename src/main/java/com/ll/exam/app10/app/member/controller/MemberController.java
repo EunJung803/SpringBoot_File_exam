@@ -66,4 +66,9 @@ public class MemberController {
     public String showProfile() {
         return "member/profile";
     }
+
+    @GetMapping("/profile/img/{id}")
+    public String showProfileImg(@PathVariable Long id) {
+        return "redirect:" + memberService.getMemberById(id).getProfileImgUrl();
+    }
 }

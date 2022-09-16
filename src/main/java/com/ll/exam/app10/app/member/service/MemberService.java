@@ -34,24 +34,7 @@ public class MemberService {
     }
 
     public Member join(String username, String password, String email, MultipartFile profileImg) {
-        String profileImgDirName = getCurrentProfileImgDirName();
-
-        String ext = Util.file.getExt(profileImg.getOriginalFilename());
-
-        String fileName = UUID.randomUUID() + "." + ext;
-
-        String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;
-        String profileImgFilePath = profileImgDirPath + "/" + fileName;
-
-        new File(profileImgDirPath).mkdirs(); // 폴더가 혹시나 없다면 만들어준다.
-
-        try {
-            profileImg.transferTo(new File(profileImgFilePath));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        String profileImgRelPath = profileImgDirName + "/" + fileName;
+        String profileImgRelPath = saveProfileImg(profileImg);
 
         Member member = Member.builder()
                 .username(username)
@@ -63,6 +46,26 @@ public class MemberService {
         memberRepository.save(member);
 
         return member;
+    }
+
+    private String saveProfileImg(MultipartFile profileImg) {
+        String profileImgDirName = getCurrentProfileImgDirName();
+
+        String ext = Util.file.getExt(profileImg.getOriginalFilename());
+
+        String fileName = UUID.randomUUID() + "." + ext;
+        String profileImgDirPath = genFileDirPath + "/" + profileImgDirName;
+        String profileImgFilePath = profileImgDirPath + "/" + fileName;
+
+        new File(profileImgDirPath).mkdirs(); // 폴더가 혹시나 없다면 만들어준다.
+
+        try {
+            profileImg.transferTo(new File(profileImgFilePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return profileImgDirName + "/" + fileName;
     }
 
     public Member getMemberById(Long id) {
@@ -99,6 +102,15 @@ public class MemberService {
     public void setProfileImgByUrl(Member member, String url) {
         String filePath = Util.file.downloadImg(url, genFileDirPath + "/" + getCurrentProfileImgDirName() + "/" + UUID.randomUUID());
         member.setProfileImg(getCurrentProfileImgDirName() + "/" + new File(filePath).getName());
+        memberRepository.save(member);
+    }
+
+    public void modify(Member member, String email, MultipartFile profileImg) {
+        removeProfileImg(member);
+        String profileImgRelPath = saveProfileImg(profileImg);
+
+        member.setEmail(email);
+        member.setProfileImg(profileImgRelPath);
         memberRepository.save(member);
     }
 }

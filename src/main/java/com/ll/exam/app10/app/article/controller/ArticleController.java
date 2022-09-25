@@ -7,16 +7,15 @@ import com.ll.exam.app10.app.base.dto.RsData;
 import com.ll.exam.app10.app.fileUpload.entity.GenFile;
 import com.ll.exam.app10.app.fileUpload.service.GenFileService;
 import com.ll.exam.app10.app.security.dto.MemberContext;
+import com.ll.exam.app10.util.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
@@ -47,13 +46,26 @@ public class ArticleController {
         }
 
         Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
-//        log.debug("fileMap : " + fileMap);
+
         Article article = articleService.write(memberContext.getId(), articleForm.getSubject(), articleForm.getContent());
 
         RsData<Map<String, GenFile>> saveFilesRsData = genFileService.saveFiles(article, fileMap);
 
         log.debug("saveFilesRsData : " + saveFilesRsData);
 
-        return "작업중";
+        String msg = "%d번 게시물이 작성되었습니다.".formatted(article.getId());
+        msg = Util.url.encode(msg);
+
+        return "redirect:/article/%d?msg=%s".formatted(article.getId(), msg);
+    }
+
+    // 상세페이지
+    @GetMapping("/{id}")
+    public String showDetail(Model model, @PathVariable Long id) {
+        Article article = articleService.getArticleById(id);
+
+        model.addAttribute("article", article);
+
+        return "article/detail";
     }
 }

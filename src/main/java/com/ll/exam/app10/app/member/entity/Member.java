@@ -23,6 +23,10 @@ public class Member extends BaseEntity {
     private String email;
     private String profileImg;
 
+    public Member(long id) {
+        super(id);
+    }
+
     public void removeProfileImgOnStorage() {   // 스토리지에서 지우게 된다 프로필 이미지를
         if (profileImg == null || profileImg.trim().length() == 0) return;  // 예외처리
 

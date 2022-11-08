@@ -37,3 +37,4 @@ out/
 .vscode/
 
 application-base-addi.yml
+application.yml

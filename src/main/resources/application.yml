@@ -35,8 +35,8 @@ spring:
     hibernate:
       ddl-auto: create
 custom:
-  genFileDirPath: /Users/eunjung/Documents/temp/app10
+  genFileDirPath: /Users/eunjung/Documents/temp/file_exam
 
 logging:
     level:
-      com.ll.exam.app10.app: debug
+      com.ll.exam.fileExam.app: debug
